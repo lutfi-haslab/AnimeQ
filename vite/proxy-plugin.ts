@@ -170,6 +170,7 @@ async function relay(
   res: import('http').ServerResponse,
   rawHeadersParam?: string,
 ) {
+  console.log(`[PROXY] Fetching: ${url}`)
   const upstream = await fetch(url, {
     method,
     headers: { 'user-agent': UA, ...headers },
@@ -177,7 +178,9 @@ async function relay(
   })
 
   const ct = upstream.headers.get('content-type') || ''
+  console.log(`[PROXY] Upstream status: ${upstream.status}, content-type: ${ct}`)
   const isManifest = /mpegurl|x-mpegurl|vnd\.apple\.mpegurl/i.test(ct)
+  const isDASH = /dash\+xml/i.test(ct) || url.includes('.mpd')
 
   setCors(res)
 
@@ -189,8 +192,27 @@ async function relay(
     return
   }
 
+  if (isDASH && method === 'GET') {
+    let text = await upstream.text()
+    const lastSlash = url.lastIndexOf('/')
+    const baseUrlDir = url.substring(0, lastSlash + 1)
+    const mpdTagRegex = /<MPD\b[^>]*>/i
+    const match = text.match(mpdTagRegex)
+    if (match) {
+      const insertIdx = match.index! + match[0].length
+      text = text.slice(0, insertIdx) + `\n\t<BaseURL>${baseUrlDir}</BaseURL>` + text.slice(insertIdx)
+    }
+    res.setHeader('content-type', 'application/dash+xml')
+    res.statusCode = upstream.status
+    res.end(text)
+    return
+  }
+
   // Pass through content-type + stream the body.
-  if (ct) res.setHeader('content-type', ct)
+  if (ct) {
+    console.log(`[PROXY] Setting content-type to: ${ct}`)
+    res.setHeader('content-type', ct)
+  }
   res.statusCode = upstream.status
   if (upstream.body) {
     const reader = upstream.body.getReader()

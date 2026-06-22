@@ -145,10 +145,22 @@ def create_app(frontend_dir: Path | None = None) -> FastAPI:
 
         ctype = resp.headers.get("content-type", "")
         is_manifest = "mpegurl" in ctype.lower()
+        is_dash = "dash+xml" in ctype.lower() or ".mpd" in url
 
         if is_manifest and method == "GET":
             text = _rewrite_manifest(resp.text, url, headers_param)
             hdrs = {"content-type": "application/vnd.apple.mpegurl", **CORS_HEADERS}
+            return Response(text, status_code=resp.status_code, headers=hdrs)
+
+        if is_dash and method == "GET":
+            text = resp.text
+            last_slash = url.rfind("/")
+            base_url_dir = url[:last_slash + 1] if last_slash != -1 else ""
+            m = re.search(r"<MPD\b[^>]*>", text, re.I)
+            if m:
+                insert_idx = m.end()
+                text = text[:insert_idx] + f"\n\t<BaseURL>{base_url_dir}</BaseURL>" + text[insert_idx:]
+            hdrs = {"content-type": "application/dash+xml", **CORS_HEADERS}
             return Response(text, status_code=resp.status_code, headers=hdrs)
 
         # Stream the body verbatim (works for .ts/.m4s/.mp4 + JSON).

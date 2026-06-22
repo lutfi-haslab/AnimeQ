@@ -117,10 +117,10 @@ export function VideoPlayer({ source, title, startAt = 0, onProgress, onEnded }:
           dashRef.current = dp
           dp.extend(
             'RequestModifier',
-            {
+            () => ({
               modifyRequestURL: (url: string) => proxiedMediaUrl(url, source.headers),
               modifyRequestHeader: (req: Request) => req,
-            },
+            }),
             true,
           )
           dp.updateSettings({
@@ -135,9 +135,15 @@ export function VideoPlayer({ source, title, startAt = 0, onProgress, onEnded }:
             setLevels(reps.map((r, index) => ({ height: r.height, index })))
             if (startAt) video.currentTime = startAt
           })
-          dp.on('error', () => setError('This stream could not be loaded. Try another provider.'))
+          dp.on('error', (e) => {
+            console.error('DashJS error:', e)
+            setError('This stream could not be loaded. Try another provider. (DashJS error: ' + JSON.stringify(e) + ')')
+          })
         })
-        .catch(() => setError('Failed to load the DASH engine.'))
+        .catch((err) => {
+          console.error('Failed to load DASH engine:', err)
+          setError('Failed to load the DASH engine: ' + String(err))
+        })
       return () => {
         destroyed = true
         dashRef.current?.destroy()
