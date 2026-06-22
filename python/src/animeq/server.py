@@ -173,7 +173,17 @@ def create_app(frontend_dir: Path | None = None) -> FastAPI:
             except ValueError:
                 candidate = frontend_dir / "index.html"
             if candidate.is_file():
-                media = "text/html" if candidate.suffix == ".html" else None
+                import mimetypes
+                media, _ = mimetypes.guess_type(str(candidate))
+                if not media:
+                    if candidate.suffix == ".html":
+                        media = "text/html"
+                    elif candidate.suffix == ".js":
+                        media = "application/javascript"
+                    elif candidate.suffix == ".css":
+                        media = "text/css"
+                    elif candidate.suffix == ".svg":
+                        media = "image/svg+xml"
                 return Response(candidate.read_bytes(), media_type=media)
             # SPA fallback for client-side routes.
             index = frontend_dir / "index.html"

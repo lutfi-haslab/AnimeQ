@@ -19,7 +19,13 @@ from pytauri_wheel.lib import builder_factory, context_factory
 
 from .server import create_app
 
-SRC_TAURI_DIR = Path(__file__).parent.absolute()
+import sys
+
+if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+    SRC_TAURI_DIR = Path(sys._MEIPASS) / "animeq"
+else:
+    SRC_TAURI_DIR = Path(__file__).parent.absolute()
+
 SERVER_PORT = int(os.environ.get("ANIMEQ_PORT", "8788"))
 DEV_ENV = os.environ.get("DEV_ENV") == "1"
 
@@ -85,6 +91,7 @@ def main() -> int:
                     {
                         "label": "main",
                         "title": "AnimeQ",
+                        "url": frontend_dist,
                         "visible": True,
                         "devtools": enable_devtools,
                     }
