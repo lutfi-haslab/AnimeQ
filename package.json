@@ -1,0 +1,40 @@
+{
+  "name": "animeq",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "AnimeQ - A premium, ad-free anime streaming platform with offline viewing, recommendations, and low-latency global streaming.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve": "vite build && wrangler pages dev dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "deploy": "bun run build && wrangler pages deploy dist --project-name=animeq --commit-dirty=true",
+    "deploy:preview": "bun run build && wrangler pages deploy dist --project-name=animeq --branch=preview --commit-dirty=true"
+  },
+  "packageManager": "bun",
+  "dependencies": {
+    "@tabler/icons-react": "^3.19.0",
+    "dashjs": "^4.7.4",
+    "hls.js": "^1.5.15",
+    "idb": "^8.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router": "^7.1.1",
+    "zustand": "^4.5.5"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.10",
+    "@types/react-dom": "^18.3.0",
+    "@types/node": "^22.7.4",
+    "@cloudflare/workers-types": "^4.20250109.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8"
+  }
+}

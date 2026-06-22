@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-surface-light text-slate-900 antialiased dark:bg-surface dark:text-slate-100;
+  font-family: 'Inter', system-ui, sans-serif;
+  overscroll-behavior-y: none;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-slate-300/60 dark:bg-slate-700/70;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400/80 dark:bg-slate-600;
+}
+
+@layer components {
+  .container-app {
+    @apply mx-auto w-full max-w-[1500px] px-4 sm:px-6 lg:px-8;
+  }
+
+  .card {
+    @apply rounded-xl border border-black/5 bg-white shadow-sm transition-all dark:border-surface-border dark:bg-surface-card;
+  }
+
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-brand-600 text-white hover:bg-brand-700 active:scale-[0.98];
+  }
+  .btn-secondary {
+    @apply btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 dark:border-surface-border dark:bg-surface-card dark:text-slate-200 dark:hover:bg-surface;
+  }
+  .btn-ghost {
+    @apply btn text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-surface-card;
+  }
+
+  .input {
+    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-surface-border dark:bg-surface-card dark:text-slate-100 dark:placeholder:text-slate-500;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-slate-300 px-3 py-1 text-xs font-medium text-slate-600 transition-colors hover:border-brand-400 hover:text-brand-600 dark:border-surface-border dark:text-slate-300 dark:hover:border-brand-500 dark:hover:text-brand-400;
+  }
+  .chip-active {
+    @apply border-brand-500 bg-brand-600 text-white hover:border-brand-600 hover:text-white;
+  }
+
+  .section-title {
+    @apply text-lg font-bold tracking-tight sm:text-xl;
+  }
+}
+
+@layer utilities {
+  .skeleton {
+    @apply rounded-md bg-slate-200/70 dark:bg-surface-border;
+    background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 700px 100%;
+    background-repeat: no-repeat;
+    @apply animate-shimmer;
+  }
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
