@@ -1,0 +1,11 @@
+identifier = "default"
+description = "Capability for the AnimeQ main window"
+windows = ["main"]
+permissions = [
+    "core:default",
+    "pytauri:default",
+    "core:window:allow-show",
+    "core:window:allow-set-size",
+    "core:window:allow-set-position",
+    "core:window:allow-center"
+]

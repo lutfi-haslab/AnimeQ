@@ -8,11 +8,11 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "serve": "vite build && wrangler pages dev dist",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "deploy": "bun run build && wrangler pages deploy dist --project-name=animeq --commit-dirty=true",
-    "deploy:preview": "bun run build && wrangler pages deploy dist --project-name=animeq --branch=preview --commit-dirty=true"
+    "desktop:dev": "python3 app_dev.py",
+    "desktop:build:mac": "vite build && python3 -m PyInstaller animeq-macos.spec --noconfirm",
+    "desktop:build:windows": "vite build && python -m PyInstaller animeq-windows.spec --noconfirm"
   },
   "packageManager": "bun",
   "dependencies": {
@@ -29,7 +29,6 @@
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "@types/node": "^22.7.4",
-    "@cloudflare/workers-types": "^4.20250109.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",

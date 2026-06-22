@@ -17,3 +17,14 @@ dist-ssr
 !.vscode/extensions.json
 .idea/
 Thumbs.db
+
+# Python / desktop
+.venv/
+__pycache__/
+*.pyc
+python/build/
+python/dist/
+python/.venv/
+python/src/animeq/frontend/
+build/
+*.app

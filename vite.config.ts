@@ -6,15 +6,16 @@ const root = import.meta.dirname ?? process.cwd()
 
 export default defineConfig({
   plugins: [react(), proxyApiPlugin()],
-  server: {
-    headers: { 'X-Robots-Tag': 'noindex, nofollow' },
-  },
   resolve: {
     alias: {
       '@': `${root}/src`,
     },
   },
+  // Build output goes into the Pytauri frontend dir so the bundled Python
+  // server + Tauri webview can serve it.
   build: {
+    outDir: 'python/src/animeq/frontend',
+    emptyOutDir: true,
     target: 'es2020',
     chunkSizeWarningLimit: 1200,
     rollupOptions: {
@@ -25,5 +26,13 @@ export default defineConfig({
         },
       },
     },
+  },
+  // Dev server for the Pytauri dev launcher. Bind explicitly to IPv4 so the
+  // webview's `http://127.0.0.1:1420` resolves (`localhost` may bind IPv6 only).
+  server: {
+    host: '127.0.0.1',
+    port: 1420,
+    strictPort: true,
+    watch: { ignored: ['**/python/**', '**/.venv/**'] },
   },
 })
